@@ -7,9 +7,10 @@
     <style>
         body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f4f4f4; }
         #display { font-size: 2rem; padding: 10px; width: 200px; text-align: center; background: white; border: 2px solid #333; margin-bottom: 10px; }
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         button { width: 60px; height: 60px; font-size: 1.5rem; cursor: pointer; border-radius: 10px; border: none; background: #ddd; }
         .submit-btn { grid-column: span 3; background: #4CAF50; color: white; }
+        iframe { width: 100%; height: 500px; margin-top: 20px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
@@ -29,10 +30,10 @@
         <button onclick="enterNumber(9)">9</button>
         <button onclick="clearDisplay()">❌</button>
         <button onclick="enterNumber(0)">0</button>
-        <button class="submit-btn" onclick="submitForm()">✅ 확인</button>
+        <button class="submit-btn" onclick="fillNotionForm()">✅ 확인</button>
     </div>
 
-    <iframe src="https://www.notion.so/1ca5cd9a8aeb80a3a4d1fa4208595e46?pvs=106" id="notionForm" style="display:none;"></iframe>
+    <iframe src="https://www.notion.so/1ca5cd9a8aeb80a3a4d1fa4208595e46?pvs=106" id="notionForm"></iframe>
 
     <script>
         function enterNumber(num) {
@@ -46,15 +47,20 @@
             document.getElementById("display").value = "";
         }
 
-        function submitForm() {
+        function fillNotionForm() {
             let phoneNumber = document.getElementById("display").value;
-            if (phoneNumber.length === 4) {
-                let notionForm = document.getElementById("notionForm");
-                notionForm.src = "https://www.notion.so/1ca5cd9a8aeb80a3a4d1fa4208595e46?pvs=106?전화번호=" + phoneNumber;
-                clearDisplay(); // 입력 필드 초기화
+            let iframe = document.getElementById("notionForm").contentWindow.document;
+            
+            // 노션 폼의 전화번호 입력 필드를 자동으로 찾아서 입력
+            let inputFields = iframe.querySelectorAll("input");
+            if (inputFields.length > 0) {
+                inputFields[0].value = phoneNumber;  // 첫 번째 입력 필드에 값 넣기
+                inputFields[0].dispatchEvent(new Event('input', { bubbles: true })); // 입력 이벤트 발생
             } else {
-                alert("전화번호 4자리를 입력해주세요!");
+                alert("노션 폼이 완전히 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
             }
+
+            clearDisplay(); // 입력 필드 초기화
         }
     </script>
 
