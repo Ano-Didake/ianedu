@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>출석 체크 키오스크</title>
+    <style>
+        body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f4f4f4; }
+        #display { font-size: 2rem; padding: 10px; width: 200px; text-align: center; background: white; border: 2px solid #333; margin-bottom: 10px; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        button { width: 60px; height: 60px; font-size: 1.5rem; cursor: pointer; border-radius: 10px; border: none; background: #ddd; }
+        .submit-btn { grid-column: span 3; background: #4CAF50; color: white; }
+    </style>
+</head>
+<body>
+
+    <h2>출석 체크</h2>
+    <input type="text" id="display" readonly>
+    
+    <div class="keypad">
+        <button onclick="enterNumber(1)">1</button>
+        <button onclick="enterNumber(2)">2</button>
+        <button onclick="enterNumber(3)">3</button>
+        <button onclick="enterNumber(4)">4</button>
+        <button onclick="enterNumber(5)">5</button>
+        <button onclick="enterNumber(6)">6</button>
+        <button onclick="enterNumber(7)">7</button>
+        <button onclick="enterNumber(8)">8</button>
+        <button onclick="enterNumber(9)">9</button>
+        <button onclick="clearDisplay()">❌</button>
+        <button onclick="enterNumber(0)">0</button>
+        <button class="submit-btn" onclick="submitForm()">✅ 확인</button>
+    </div>
+
+    <iframe src="https://www.notion.so/1ca5cd9a8aeb80a3a4d1fa4208595e46?pvs=106" id="notionForm" style="display:none;"></iframe>
+
+    <script>
+        function enterNumber(num) {
+            let display = document.getElementById("display");
+            if (display.value.length < 4) {
+                display.value += num;
+            }
+        }
+
+        function clearDisplay() {
+            document.getElementById("display").value = "";
+        }
+
+        function submitForm() {
+            let phoneNumber = document.getElementById("display").value;
+            if (phoneNumber.length === 4) {
+                let notionForm = document.getElementById("notionForm");
+                notionForm.src = "https://www.notion.so/1ca5cd9a8aeb80a3a4d1fa4208595e46?pvs=106?전화번호=" + phoneNumber;
+                clearDisplay(); // 입력 필드 초기화
+            } else {
+                alert("전화번호 4자리를 입력해주세요!");
+            }
+        }
+    </script>
+
+</body>
+</html>
